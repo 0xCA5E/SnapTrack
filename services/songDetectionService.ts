@@ -1,4 +1,4 @@
-import Constants from 'expo-constants';
+import { getApiBaseUrl } from '../config/api';
 
 export interface DetectedSong {
   title: string;
@@ -11,15 +11,6 @@ export interface SongDetectionResult {
   songs: DetectedSong[];
   error?: string;
   rawResponse?: string;
-}
-
-function getApiBaseUrl(): string {
-  const debuggerHost = Constants.expoConfig?.hostUri;
-  if (debuggerHost) {
-    const host = debuggerHost.split(':')[0];
-    return `http://${host}:3001`;
-  }
-  return 'http://localhost:3001';
 }
 
 export async function detectSongsFromImage(imageBase64: string): Promise<SongDetectionResult> {

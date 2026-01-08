@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Constants from 'expo-constants';
+import { getApiBaseUrl } from '../config/api';
 
 const INTEGRATIONS_STORAGE_KEY = 'INTEGRATIONS_STATUS';
 
@@ -22,15 +22,6 @@ export interface IntegrationsState {
   youtube: IntegrationConfig;
   apple_music: IntegrationConfig;
   amazon_music: IntegrationConfig;
-}
-
-function getApiBaseUrl(): string {
-  const debuggerHost = Constants.expoConfig?.hostUri;
-  if (debuggerHost) {
-    const host = debuggerHost.split(':')[0];
-    return `http://${host}:3001`;
-  }
-  return 'http://localhost:3001';
 }
 
 const DEFAULT_INTEGRATIONS: IntegrationsState = {

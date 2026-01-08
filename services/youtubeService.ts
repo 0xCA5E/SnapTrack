@@ -1,13 +1,4 @@
-import Constants from 'expo-constants';
-
-function getApiBaseUrl(): string {
-  const debuggerHost = Constants.expoConfig?.hostUri;
-  if (debuggerHost) {
-    const host = debuggerHost.split(':')[0];
-    return `http://${host}:3001`;
-  }
-  return 'http://localhost:3001';
-}
+import { getApiBaseUrl } from '../config/api';
 
 export interface YouTubePlaylistInfo {
   id: string;

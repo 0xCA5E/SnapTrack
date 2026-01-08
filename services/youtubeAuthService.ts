@@ -3,6 +3,7 @@ import * as Crypto from 'expo-crypto';
 import * as WebBrowser from 'expo-web-browser';
 import Constants from 'expo-constants';
 import { Platform } from 'react-native';
+import { getApiBaseUrl } from '../config/api';
 
 const GOOGLE_AUTH_ENDPOINT = 'https://accounts.google.com/o/oauth2/v2/auth';
 const GOOGLE_TOKEN_ENDPOINT = 'https://oauth2.googleapis.com/token';
@@ -12,15 +13,6 @@ const YOUTUBE_SCOPES = [
 ];
 
 WebBrowser.maybeCompleteAuthSession();
-
-function getApiBaseUrl(): string {
-  const debuggerHost = Constants.expoConfig?.hostUri;
-  if (debuggerHost) {
-    const host = debuggerHost.split(':')[0];
-    return `http://${host}:3001`;
-  }
-  return 'http://localhost:3001';
-}
 
 function getRedirectUri(): string {
   if (Platform.OS === 'web') {
