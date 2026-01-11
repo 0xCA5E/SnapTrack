@@ -5,7 +5,8 @@
     "extra": {
       "eas": {
         "projectId": "e57cf370"
-      }
+      },
+      "googleClientId": "${EXPO_PUBLIC_GOOGLE_CLIENT_ID}"
     },
     "version": "1.0.0",
     "orientation": "portrait",

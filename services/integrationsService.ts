@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getApiBaseUrl } from '../config/api';
+import { getYouTubeAuthStatus, getYouTubePlaylists } from './youtubeAuthService';
 
 const INTEGRATIONS_STORAGE_KEY = 'INTEGRATIONS_STATUS';
 
@@ -101,23 +102,12 @@ export async function checkSpotifyConnection(): Promise<boolean> {
 
 export async function checkYouTubeConnection(): Promise<boolean> {
   try {
-    const apiUrl = getApiBaseUrl();
-    
-    const authResponse = await fetch(`${apiUrl}/api/youtube/auth/status`);
-    if (!authResponse.ok) {
-      await updateIntegration('youtube', { 
-        connected: false, 
-        error: 'Failed to check YouTube status' 
-      });
-      return false;
-    }
-    
-    const authStatus = await authResponse.json();
+    const authStatus = await getYouTubeAuthStatus();
     
     if (!authStatus.hasCredentials) {
       await updateIntegration('youtube', { 
         connected: false, 
-        error: 'YouTube not configured. Add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET secrets.' 
+        error: 'YouTube not configured. Add EXPO_PUBLIC_GOOGLE_CLIENT_ID.' 
       });
       return false;
     }
@@ -130,16 +120,15 @@ export async function checkYouTubeConnection(): Promise<boolean> {
       return false;
     }
     
-    const response = await fetch(`${apiUrl}/api/youtube/playlists`);
-    
-    if (response.ok) {
+    try {
+      await getYouTubePlaylists();
       await updateIntegration('youtube', { connected: true, error: undefined });
       return true;
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Connection failed';
+      await updateIntegration('youtube', { connected: false, error: errorMessage });
+      return false;
     }
-    
-    const data = await response.json();
-    await updateIntegration('youtube', { connected: false, error: data.error });
-    return false;
   } catch (error) {
     await updateIntegration('youtube', { 
       connected: false, 
